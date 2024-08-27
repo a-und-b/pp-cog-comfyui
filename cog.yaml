@@ -71,4 +71,4 @@ build:
     - export IP_ADAPTER_SDXL_URL="https://huggingface.co/h94/IP-Adapter/resolve/main/sdxl_models/ip-adapter_sdxl.safetensors"
     - export IP_ADAPTER_IMAGE_ENCODER_URL="https://huggingface.co/h94/IP-Adapter/resolve/main/sdxl_models/image_encoder/model.safetensors"
 predict: "predict.py:Predictor"
-image: "r8.im/replicate/cog-comfyui@sha256:58f2c5fa4791d8778e8b300831634e9f13b0e0ccfb0ceb25a8c610cc36d7cce8"
+image: "r8.im/replicate/cog-comfyui:latest"
