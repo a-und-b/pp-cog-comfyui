@@ -1,15 +1,11 @@
-# An example of how to convert a given API workflow into its own Replicate model
-# Replace predict.py with this file when building your own workflow
-
 import os
 import mimetypes
 import json
-import shutil
-from typing import List
+import random
+from typing import List, Optional
 from cog import BasePredictor, Input, Path
 from comfyui import ComfyUI
 from cog_model_helpers import optimise_images
-from cog_model_helpers import seed as seed_helper
 
 OUTPUT_DIR = "/tmp/outputs"
 INPUT_DIR = "/tmp/inputs"
@@ -18,10 +14,8 @@ ALL_DIRECTORIES = [OUTPUT_DIR, INPUT_DIR, COMFYUI_TEMP_OUTPUT_DIR]
 
 mimetypes.add_type("image/webp", ".webp")
 
-# Save your example JSON to the same directory as predict.py
 api_json_file = "workflow_api.json"
 
-# Force HF offline
 os.environ["HF_DATASETS_OFFLINE"] = "1"
 os.environ["TRANSFORMERS_OFFLINE"] = "1"
 os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
@@ -31,76 +25,91 @@ class Predictor(BasePredictor):
         self.comfyUI = ComfyUI("127.0.0.1:8188")
         self.comfyUI.start_server(OUTPUT_DIR, INPUT_DIR)
 
-        # Give a list of weights filenames to download during setup
         with open(api_json_file, "r") as file:
             workflow = json.loads(file.read())
         self.comfyUI.handle_weights(
             workflow,
-            weights_to_download=[],
+            weights_to_download=[
+                (os.environ["JUGGERNAUT_XL_URL"], "juggernautXL_v9Rundiffusionphoto2.safetensors"),
+                (os.environ["ADD_DETAIL_XL_URL"], "add-detail-xl.safetensors"),
+                (os.environ["ARS_MJ_STYLE_XL_URL"], "ArsMJStyleXL_-_Watercolor.safetensors"),
+                (os.environ["FRESH_IDEAS_PIXAR_URL"], "Fresh Ideas@pixar style_SDXL.safetensors"),
+                (os.environ["POP_ART_STYLE_URL"], "pop_art_style.safetensors"),
+            ],
         )
 
-    def filename_with_extension(self, input_file, prefix):
-        extension = os.path.splitext(input_file.name)[1]
-        return f"{prefix}{extension}"
-
-    def handle_input_file(
-        self,
-        input_file: Path,
-        filename: str = "image.png",
-    ):
-        shutil.copy(input_file, os.path.join(INPUT_DIR, filename))
-
-    # Update nodes in the JSON workflow to modify your workflow based on the given inputs
     def update_workflow(self, workflow, **kwargs):
-        # Below is an example showing how to get the node you need and update the inputs
+        # Update animal LoRA URL
+        workflow["5"]["inputs"]["lora_name"] = kwargs["animal_lora_url"]
+        
+        # Update animal type in prompts
+        for node_id in ["8", "14", "21", "28"]:
+            if "prompt" in workflow[node_id]["inputs"]:
+                workflow[node_id]["inputs"]["prompt"] = workflow[node_id]["inputs"]["prompt"].replace("{animal_type}", kwargs["animal_type"])
+            if "wildcard_text" in workflow[node_id]["inputs"]:
+                workflow[node_id]["inputs"]["wildcard_text"] = workflow[node_id]["inputs"]["wildcard_text"].replace("{animal_type}", kwargs["animal_type"])
+            if "populated_text" in workflow[node_id]["inputs"]:
+                workflow[node_id]["inputs"]["populated_text"] = workflow[node_id]["inputs"]["populated_text"].replace("{animal_type}", kwargs["animal_type"])
 
-        # positive_prompt = workflow["6"]["inputs"]
-        # positive_prompt["text"] = kwargs["prompt"]
+        # Update IP-Adapter input image URL
+        workflow["16"]["inputs"]["image"] = kwargs["ip_adapter_image_url"]
 
-        # negative_prompt = workflow["7"]["inputs"]
-        # negative_prompt["text"] = f"nsfw, {kwargs['negative_prompt']}"
-
-        # sampler = workflow["3"]["inputs"]
-        # sampler["seed"] = kwargs["seed"]
-        pass
+        # Update seeds (wildcard population and image generation)
+        workflow["8"]["inputs"]["seed"] = kwargs["watercolor_seed"]
+        workflow["10"]["inputs"]["seed"] = kwargs["watercolor_seed"]
+        workflow["21"]["inputs"]["seed"] = kwargs["pixar_seed"]
+        workflow["23"]["inputs"]["seed"] = kwargs["pixar_seed"]
+        workflow["28"]["inputs"]["seed"] = kwargs["popart_seed"]
+        workflow["30"]["inputs"]["seed"] = kwargs["popart_seed"]
 
     def predict(
         self,
-        prompt: str = Input(
-            default="",
+        animal_lora_url: str = Input(
+            description="URL or filename of the animal LoRA to use",
+            default="https://example.com/animal_lora.safetensors",
         ),
-        negative_prompt: str = Input(
-            description="Things you do not want to see in your image",
-            default="",
+        animal_type: str = Input(
+            description="Type of animal (e.g., cat, dog)",
+            default="cat",
         ),
-        image: Path = Input(
-            description="An input image",
+        ip_adapter_image_url: str = Input(
+            description="URL of the input image for IP-Adapter",
+            default="https://example.com/input_image.jpg",
+        ),
+        watercolor_seed: Optional[int] = Input(
+            description="Seed for watercolor generation (leave empty for random)",
+            default=None,
+        ),
+        pixar_seed: Optional[int] = Input(
+            description="Seed for Pixar-style generation (leave empty for random)",
+            default=None,
+        ),
+        popart_seed: Optional[int] = Input(
+            description="Seed for Pop Art generation (leave empty for random)",
             default=None,
         ),
         output_format: str = optimise_images.predict_output_format(),
         output_quality: int = optimise_images.predict_output_quality(),
-        seed: int = seed_helper.predict_seed(),
     ) -> List[Path]:
         """Run a single prediction on the model"""
         self.comfyUI.cleanup(ALL_DIRECTORIES)
 
-        # Make sure to set the seeds in your workflow
-        seed = seed_helper.generate(seed)
-
-        image_filename = None
-        if image:
-            image_filename = self.filename_with_extension(image, "image")
-            self.handle_input_file(image, image_filename)
-
         with open(api_json_file, "r") as file:
             workflow = json.loads(file.read())
 
+        # Generate random seeds if not provided
+        watercolor_seed = watercolor_seed if watercolor_seed is not None else random.randint(0, 2**32 - 1)
+        pixar_seed = pixar_seed if pixar_seed is not None else random.randint(0, 2**32 - 1)
+        popart_seed = popart_seed if popart_seed is not None else random.randint(0, 2**32 - 1)
+
         self.update_workflow(
             workflow,
-            prompt=prompt,
-            negative_prompt=negative_prompt,
-            image_filename=image_filename,
-            seed=seed,
+            animal_lora_url=animal_lora_url,
+            animal_type=animal_type,
+            ip_adapter_image_url=ip_adapter_image_url,
+            watercolor_seed=watercolor_seed,
+            pixar_seed=pixar_seed,
+            popart_seed=popart_seed,
         )
 
         wf = self.comfyUI.load_workflow(workflow)

@@ -1,0 +1,519 @@
+{
+  "1": {
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "2": {
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "3": {
+    "inputs": {
+      "filename_prefix": "JOB-ID_watercolor",
+      "images": [
+        "2",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "4": {
+    "inputs": {
+      "ckpt_name": "juggernautXL_v9Rundiffusionphoto2.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "5": {
+    "inputs": {
+      "lora_name": "animal.safetensors",
+      "strength_model": 1.2,
+      "strength_clip": 1.2,
+      "model": [
+        "6",
+        0
+      ],
+      "clip": [
+        "6",
+        1
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load Job LoRA"
+    }
+  },
+  "6": {
+    "inputs": {
+      "lora_name": "add-detail-xl.safetensors",
+      "strength_model": 0.5,
+      "strength_clip": 0.5,
+      "model": [
+        "4",
+        0
+      ],
+      "clip": [
+        "4",
+        1
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load Detail LoRA"
+    }
+  },
+  "7": {
+    "inputs": {
+      "text": [
+        "8",
+        0
+      ],
+      "clip": [
+        "17",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "8": {
+    "inputs": {
+      "wildcard_text": "ArsMJStyle Watercolor, impressionist (watercolor:1.25) painting of (happy:0.1) {animal_type}, (close-up portrait:1.25), simple background with watercolor texture, vibrant, beautiful, painterly, detailed, textural, artistic",
+      "populated_text": "ArsMJStyle Watercolor, impressionist (watercolor:1.25) painting of (happy:0.1) {animal_type}, (close-up portrait:1.25), simple background with watercolor texture, vibrant, beautiful, painterly, detailed, textural, artistic",
+      "mode": true,
+      "seed": 257846400432818,
+      "Select to add Wildcard": "Select the Wildcard to add to the text"
+    },
+    "class_type": "ImpactWildcardProcessor",
+    "_meta": {
+      "title": "Prompt"
+    }
+  },
+  "9": {
+    "inputs": {
+      "text": "(signature:1.25), floral, flowers, frame, wall, blue fur, ink,  product photography, (artist name:1.25), text, logo, anime, photorealistic, 35mm film, deformed, (tongue out:1.25), glitch, low contrast, noisy, (dog collar, necklace, neckband, collar:1.5), ragged, tattered, deformed, framed, drop shadow",
+      "clip": [
+        "17",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "10": {
+    "inputs": {
+      "seed": 402564476556640,
+      "steps": 30,
+      "cfg": 7.5,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
+      "denoise": 1,
+      "model": [
+        "17",
+        0
+      ],
+      "positive": [
+        "7",
+        0
+      ],
+      "negative": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "11": {
+    "inputs": {
+      "preset": "STANDARD (medium strength)",
+      "model": [
+        "5",
+        0
+      ]
+    },
+    "class_type": "IPAdapterUnifiedLoader",
+    "_meta": {
+      "title": "IPAdapterUnifiedLoader"
+    }
+  },
+  "12": {
+    "inputs": {
+      "weight": 0.85,
+      "start_at": 0.15,
+      "end_at": 0.85,
+      "weight_type": "prompt is more important",
+      "model": [
+        "11",
+        0
+      ],
+      "ipadapter": [
+        "11",
+        1
+      ],
+      "image": [
+        "13",
+        0
+      ],
+      "attn_mask": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "IPAdapter",
+    "_meta": {
+      "title": "IPAdapter"
+    }
+  },
+  "13": {
+    "inputs": {
+      "padding_left": 0,
+      "padding_right": 0,
+      "padding_top": 0,
+      "padding_bottom": 0,
+      "image": [
+        "16",
+        0
+      ],
+      "mask": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "Bounded Image Crop with Mask",
+    "_meta": {
+      "title": "Bounded Image Crop with Mask"
+    }
+  },
+  "14": {
+    "inputs": {
+      "prompt": "{animal_type} face",
+      "threshold": 0.15,
+      "smooth": 20,
+      "dilate": -5,
+      "blur": 10,
+      "clip_seg": [
+        "15",
+        0
+      ],
+      "image": [
+        "16",
+        0
+      ]
+    },
+    "class_type": "ApplyCLIPSeg+",
+    "_meta": {
+      "title": "ApplyCLIPSeg+"
+    }
+  },
+  "15": {
+    "inputs": {},
+    "class_type": "LoadCLIPSegModels+",
+    "_meta": {
+      "title": "LoadCLIPSegModels+"
+    }
+  },
+  "16": {
+    "inputs": {
+      "image": "{img_url}",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "17": {
+    "inputs": {
+      "lora_name": "ArsMJStyleXL_-_Watercolor.safetensors",
+      "strength_model": 0.6,
+      "strength_clip": 0.6,
+      "model": [
+        "12",
+        0
+      ],
+      "clip": [
+        "5",
+        1
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load Style LoRA"
+    }
+  },
+  "18": {
+    "inputs": {
+      "samples": [
+        "23",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "19": {
+    "inputs": {
+      "filename_prefix": "JOB-ID_render",
+      "images": [
+        "18",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "20": {
+    "inputs": {
+      "text": [
+        "21",
+        0
+      ],
+      "clip": [
+        "24",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "21": {
+    "inputs": {
+      "wildcard_text": "(FRESHIDEAS pixar style:1.33), (closeup {animal_type}:1.15) with a magic wand chasing bubbles, in the office, (funny:1.3), (happy:0.1), 3d render (movie poster) (closeup:1.2) (adorable:1.2), octane render, volumetric, dramatic lighting, friendly, kids movie, animation, golden ratio, rule of thirds, thoughtful composition",
+      "populated_text": "(FRESHIDEAS pixar style:1.33), (closeup {animal_type}:1.15) with a magic wand chasing bubbles, in the office, (funny:1.3), (happy:0.1), 3d render (movie poster) (closeup:1.2) (adorable:1.2), octane render, volumetric, dramatic lighting, friendly, kids movie, animation, golden ratio, rule of thirds, thoughtful composition",
+      "mode": true,
+      "seed": 536195857526220,
+      "Select to add Wildcard": "Select the Wildcard to add to the text"
+    },
+    "class_type": "ImpactWildcardProcessor",
+    "_meta": {
+      "title": "Prompt"
+    }
+  },
+  "22": {
+    "inputs": {
+      "text": "text, watermark, tongue out, anime, comic, drawing, sketch, (dog collar, necklace, neckband, collar:1.9), ugly, deformed, noisy, low poly, blurry, painting, body, cross-eyed, squint, tongue out\n",
+      "clip": [
+        "24",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "23": {
+    "inputs": {
+      "seed": 213574406975546,
+      "steps": 25,
+      "cfg": 8,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "karras",
+      "denoise": 1,
+      "model": [
+        "24",
+        0
+      ],
+      "positive": [
+        "20",
+        0
+      ],
+      "negative": [
+        "22",
+        0
+      ],
+      "latent_image": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "24": {
+    "inputs": {
+      "lora_name": "Fresh Ideas@pixar style_SDXL.safetensors",
+      "strength_model": 0.7,
+      "strength_clip": 0.7,
+      "model": [
+        "12",
+        0
+      ],
+      "clip": [
+        "5",
+        1
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load Style LoRA"
+    }
+  },
+  "25": {
+    "inputs": {
+      "samples": [
+        "30",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "26": {
+    "inputs": {
+      "filename_prefix": "JOB-ID_popart",
+      "images": [
+        "25",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "27": {
+    "inputs": {
+      "text": [
+        "28",
+        0
+      ],
+      "clip": [
+        "31",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "28": {
+    "inputs": {
+      "wildcard_text": "minimalist flat illustration art print of ({animal_type}:1.25), close-up, (pop art style:1.25), colorful, small halftone dot shading, (godrays:1.4), thoughtful composition, rule of thirds, magazine cover, geometric gradients, ((simple background:1.25) gradient)), (vibrant (rainbow:0.75) color scheme:1.25)",
+      "populated_text": "minimalist flat illustration art print of ({animal_type}:1.25), close-up, (pop art style:1.25), colorful, small halftone dot shading, (godrays:1.4), thoughtful composition, rule of thirds, magazine cover, geometric gradients, ((simple background:1.25) gradient)), (vibrant (rainbow:0.75) color scheme:1.25)",
+      "mode": true,
+      "seed": 218122796132992,
+      "Select to add Wildcard": "Select the Wildcard to add to the text"
+    },
+    "class_type": "ImpactWildcardProcessor",
+    "_meta": {
+      "title": "Prompt"
+    }
+  },
+  "29": {
+    "inputs": {
+      "text": "geometric shapes, sun, circle, anime, photorealistic, text, typography, type, logo, 35mm film, deformed, glitch, low contrast, noisy, (tongue:0.75) out, lipstick, collar, (cat collar), scarf, neckerchief, dog tag, colored fur,",
+      "clip": [
+        "31",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "30": {
+    "inputs": {
+      "seed": 1104322872492071,
+      "steps": 25,
+      "cfg": 8,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "karras",
+      "denoise": 1,
+      "model": [
+        "31",
+        0
+      ],
+      "positive": [
+        "27",
+        0
+      ],
+      "negative": [
+        "29",
+        0
+      ],
+      "latent_image": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "31": {
+    "inputs": {
+      "lora_name": "pop_art_style.safetensors",
+      "strength_model": 0.7,
+      "strength_clip": 0.7,
+      "model": [
+        "12",
+        0
+      ],
+      "clip": [
+        "5",
+        1
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load Style LoRA"
+    }
+  }
+}

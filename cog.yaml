@@ -3,6 +3,7 @@ build:
   cuda: "12.1"
   system_packages:
     - ffmpeg
+    - git
   python_version: "3.10.6"
   python_packages:
     - torch
@@ -96,4 +97,20 @@ build:
   run:
     - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/download/v0.8.1/pget_linux_x86_64" && chmod +x /usr/local/bin/pget
     - pip install onnxruntime-gpu --extra-index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/
+    - git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git /comfyui/custom_nodes/ComfyUI-Impact-Pack
+    - git clone https://github.com/ltdrdata/ComfyUI-Impact-Subpack /comfyui/custom_nodes/ComfyUI-Impact-Pack/impact_subpack
+    - git clone https://github.com/time-river/ComfyUI-CLIPSeg.git /comfyui/custom_nodes/ComfyUI-CLIPSeg
+    - git clone https://github.com/WASasquatch/was-node-suite-comfyui /comfyui/custom_nodes/was_node_suite
+    - find /comfyui/custom_nodes/ -type f -name install.py -exec python3 {} \;
 predict: "predict.py:Predictor"
+image: "r8.im/replicate/cog-comfyui@sha256:58f2c5fa4791d8778e8b300831634e9f13b0e0ccfb0ceb25a8c610cc36d7cce8"
+environment:
+  JUGGERNAUT_XL_URL: "https://civitai.com/models/133005?modelVersionId=348913"
+  ADD_DETAIL_XL_URL: "https://huggingface.co/madebyollin/sdxl-vae-fp16-fix/resolve/main/sdxl_vae.safetensors"
+  ARS_MJ_STYLE_XL_URL: "https://civitai.com/api/download/models/636076?type=Model&format=SafeTensor"
+  FRESH_IDEAS_PIXAR_URL: "https://civitai.com/api/download/models/599318?type=Model&format=SafeTensor"
+  POP_ART_STYLE_URL: "https://civitai.com/api/download/models/192584?type=Model&format=SafeTensor"
+  SD_XL_BASE_URL: "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"
+  SDXL_VAE_URL: "https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors"
+  IP_ADAPTER_SDXL_URL: "https://huggingface.co/h94/IP-Adapter/resolve/main/sdxl_models/ip-adapter_sdxl.safetensors"
+  IP_ADAPTER_IMAGE_ENCODER_URL: "https://huggingface.co/h94/IP-Adapter/resolve/main/sdxl_models/image_encoder/model.safetensors"
