@@ -85,8 +85,8 @@
   },
   "8": {
     "inputs": {
-      "wildcard_text": "ArsMJStyle Watercolor, impressionist (watercolor:1.25) painting of (happy:0.1) {animal_type}, (close-up portrait:1.25), simple background with watercolor texture, vibrant, beautiful, painterly, detailed, textural, artistic",
-      "populated_text": "ArsMJStyle Watercolor, impressionist (watercolor:1.25) painting of (happy:0.1) {animal_type}, (close-up portrait:1.25), simple background with watercolor texture, vibrant, beautiful, painterly, detailed, textural, artistic",
+      "wildcard_text": "ArsMJStyle Watercolor, impressionist (watercolor:1.25) painting of (happy:0.1) tameli {animal_type}, (close-up portrait:1.25), simple background with watercolor texture, vibrant, beautiful, painterly, detailed, textural, artistic",
+      "populated_text": "ArsMJStyle Watercolor, impressionist (watercolor:1.25) painting of (happy:0.1) tameli {animal_type}, (close-up portrait:1.25), simple background with watercolor texture, vibrant, beautiful, painterly, detailed, textural, artistic",
       "mode": true,
       "seed": 257846400432818,
       "Select to add Wildcard": "Select the Wildcard to add to the text"
@@ -304,8 +304,8 @@
   },
   "21": {
     "inputs": {
-      "wildcard_text": "(FRESHIDEAS pixar style:1.33), (closeup {animal_type}:1.15) with a magic wand chasing bubbles, in the office, (funny:1.3), (happy:0.1), 3d render (movie poster) (closeup:1.2) (adorable:1.2), octane render, volumetric, dramatic lighting, friendly, kids movie, animation, golden ratio, rule of thirds, thoughtful composition",
-      "populated_text": "(FRESHIDEAS pixar style:1.33), (closeup {animal_type}:1.15) with a magic wand chasing bubbles, in the office, (funny:1.3), (happy:0.1), 3d render (movie poster) (closeup:1.2) (adorable:1.2), octane render, volumetric, dramatic lighting, friendly, kids movie, animation, golden ratio, rule of thirds, thoughtful composition",
+      "wildcard_text": "(FRESHIDEAS pixar style:1.33), (closeup tameli {animal_type}:1.15) with a magic wand chasing bubbles, in the office, (funny:1.3), (happy:0.1), 3d render (movie poster) (closeup:1.2) (adorable:1.2), octane render, volumetric, dramatic lighting, friendly, kids movie, animation, golden ratio, rule of thirds, thoughtful composition",
+      "populated_text": "(FRESHIDEAS pixar style:1.33), (closeup tameli {animal_type}:1.15) with a magic wand chasing bubbles, in the office, (funny:1.3), (happy:0.1), 3d render (movie poster) (closeup:1.2) (adorable:1.2), octane render, volumetric, dramatic lighting, friendly, kids movie, animation, golden ratio, rule of thirds, thoughtful composition",
       "mode": true,
       "seed": 536195857526220,
       "Select to add Wildcard": "Select the Wildcard to add to the text"
@@ -424,8 +424,8 @@
   },
   "28": {
     "inputs": {
-      "wildcard_text": "minimalist flat illustration art print of ({animal_type}:1.25), close-up, (pop art style:1.25), colorful, small halftone dot shading, (godrays:1.4), thoughtful composition, rule of thirds, magazine cover, geometric gradients, ((simple background:1.25) gradient)), (vibrant (rainbow:0.75) color scheme:1.25)",
-      "populated_text": "minimalist flat illustration art print of ({animal_type}:1.25), close-up, (pop art style:1.25), colorful, small halftone dot shading, (godrays:1.4), thoughtful composition, rule of thirds, magazine cover, geometric gradients, ((simple background:1.25) gradient)), (vibrant (rainbow:0.75) color scheme:1.25)",
+      "wildcard_text": "minimalist flat illustration art print of (tameli {animal_type}:1.25), close-up, (pop art style:1.25), colorful, small halftone dot shading, (godrays:1.4), thoughtful composition, rule of thirds, magazine cover, geometric gradients, ((simple background:1.25) gradient)), (vibrant (rainbow:0.75) color scheme:1.25)",
+      "populated_text": "minimalist flat illustration art print of (tameli {animal_type}:1.25), close-up, (pop art style:1.25), colorful, small halftone dot shading, (godrays:1.4), thoughtful composition, rule of thirds, magazine cover, geometric gradients, ((simple background:1.25) gradient)), (vibrant (rainbow:0.75) color scheme:1.25)",
       "mode": true,
       "seed": 218122796132992,
       "Select to add Wildcard": "Select the Wildcard to add to the text"

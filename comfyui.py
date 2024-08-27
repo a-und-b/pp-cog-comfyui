@@ -33,8 +33,8 @@ class ComfyUI:
         )
         server_thread.start()
         while not self.is_server_running():
-            if time.time() - start_time > 60:
-                raise TimeoutError("Server did not start within 60 seconds")
+            if time.time() - start_time > 180:
+                raise TimeoutError("Server did not start within 180 seconds")
             time.sleep(0.5)
 
         elapsed_time = time.time() - start_time
