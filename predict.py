@@ -3,7 +3,7 @@ import mimetypes
 import json
 import random
 import logging
-from typing import List, Optional
+from typing import List
 from cog import BasePredictor, Input, Path
 from comfyui import ComfyUI
 from cog_model_helpers import optimise_images
@@ -93,17 +93,17 @@ class Predictor(BasePredictor):
             description="URL of the input image for IP-Adapter",
             default="https://example.com/input_image.jpg",
         ),
-        watercolor_seed: Optional[int] = Input(
-            description="Seed for watercolor generation (leave empty for random)",
-            default=None,
+        watercolor_seed: int = Input(
+            description="Seed for watercolor generation (set to -1 for random)",
+            default=-1,
         ),
-        pixar_seed: Optional[int] = Input(
-            description="Seed for Pixar-style generation (leave empty for random)",
-            default=None,
+        pixar_seed: int = Input(
+            description="Seed for Pixar-style generation (set to -1 for random)",
+            default=-1,
         ),
-        popart_seed: Optional[int] = Input(
-            description="Seed for Pop Art generation (leave empty for random)",
-            default=None,
+        popart_seed: int = Input(
+            description="Seed for Pop Art generation (set to -1 for random)",
+            default=-1,
         ),
         output_format: str = optimise_images.predict_output_format(),
         output_quality: int = optimise_images.predict_output_quality(),
@@ -116,10 +116,10 @@ class Predictor(BasePredictor):
             with open(api_json_file, "r") as file:
                 workflow = json.loads(file.read())
 
-            # Generate random seeds if not provided
-            watercolor_seed = watercolor_seed if watercolor_seed is not None else random.randint(0, 2**32 - 1)
-            pixar_seed = pixar_seed if pixar_seed is not None else random.randint(0, 2**32 - 1)
-            popart_seed = popart_seed if popart_seed is not None else random.randint(0, 2**32 - 1)
+            # Generate random seeds if -1 is provided
+            watercolor_seed = random.randint(0, 2**32 - 1) if watercolor_seed == -1 else watercolor_seed
+            pixar_seed = random.randint(0, 2**32 - 1) if pixar_seed == -1 else pixar_seed
+            popart_seed = random.randint(0, 2**32 - 1) if popart_seed == -1 else popart_seed
 
             self.update_workflow(
                 workflow,
