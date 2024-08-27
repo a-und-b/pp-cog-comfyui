@@ -5,9 +5,9 @@ def run_prediction():
     command = [
         "cog",
         "predict",
-        "-i", "animal_lora_url=https://example.com/cat_lora.safetensors",
+        "-i", "animal_lora_url=https://cdn.andersundbesser.de/petprinted/animal.safetensors",
         "-i", "animal_type=cat",
-        "-i", "ip_adapter_image_url=https://example.com/reference_image.jpg",
+        "-i", "ip_adapter_image_url=https://cdn.andersundbesser.de/petprinted/ipa.jpg",
         "-i", "watercolor_seed=42",
         "-i", "pixar_seed=123",
         "-i", "popart_seed=789",

@@ -86,6 +86,9 @@ build:
     # For train.py
     - huggingface_hub
   run:
+    - apt-get update && apt-get install -y gnupg2
+    - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC
+    - apt-get update && apt-get install -y curl
     - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/download/v0.8.1/pget_linux_x86_64" && chmod +x /usr/local/bin/pget
     - pip install onnxruntime-gpu --extra-index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/
     - jq -r '.[] | "git clone " + .repo + " /comfyui/custom_nodes/" + (.repo | split("/")[-1] | sub(".git$"; "")) + " && cd /comfyui/custom_nodes/" + (.repo | split("/")[-1] | sub(".git$"; "")) + " && git checkout " + .commit' custom_nodes.json | sh
