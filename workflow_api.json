@@ -41,30 +41,11 @@
   },
   "4": {
     "inputs": {
-      "ckpt_name": "juggernautXL_v9Rundiffusionphoto2.safetensors"
+      "ckpt_name": "Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors"
     },
     "class_type": "CheckpointLoaderSimple",
     "_meta": {
       "title": "Load Checkpoint"
-    }
-  },
-  "5": {
-    "inputs": {
-      "lora_name": "animal.safetensors",
-      "strength_model": 1.2,
-      "strength_clip": 1.2,
-      "model": [
-        "6",
-        0
-      ],
-      "clip": [
-        "6",
-        1
-      ]
-    },
-    "class_type": "LoraLoader",
-    "_meta": {
-      "title": "Load Job LoRA"
     }
   },
   "6": {
@@ -162,7 +143,7 @@
     "inputs": {
       "preset": "STANDARD (medium strength)",
       "model": [
-        "5",
+        "32",
         0
       ]
     },
@@ -249,7 +230,7 @@
   },
   "16": {
     "inputs": {
-      "image": "{img_url}",
+      "image": "ipa.png",
       "upload": "image"
     },
     "class_type": "LoadImage",
@@ -267,7 +248,7 @@
         0
       ],
       "clip": [
-        "5",
+        "32",
         1
       ]
     },
@@ -380,14 +361,14 @@
   "24": {
     "inputs": {
       "lora_name": "Fresh Ideas@pixar style_SDXL.safetensors",
-      "strength_model": 0.7,
-      "strength_clip": 0.7,
+      "strength_model": 0.7000000000000001,
+      "strength_clip": 0.7000000000000001,
       "model": [
         "12",
         0
       ],
       "clip": [
-        "5",
+        "32",
         1
       ]
     },
@@ -500,20 +481,40 @@
   "31": {
     "inputs": {
       "lora_name": "pop_art_style.safetensors",
-      "strength_model": 0.7,
-      "strength_clip": 0.7,
+      "strength_model": 0.7000000000000001,
+      "strength_clip": 0.7000000000000001,
       "model": [
         "12",
         0
       ],
       "clip": [
-        "5",
+        "32",
         1
       ]
     },
     "class_type": "LoraLoader",
     "_meta": {
       "title": "Load Style LoRA"
+    }
+  },
+  "32": {
+    "inputs": {
+      "lora_link": "{animal_lora_url}",
+      "strength_model": 1,
+      "strength_clip": 1,
+      "output": "/tmp",
+      "model": [
+        "6",
+        0
+      ],
+      "clip": [
+        "6",
+        1
+      ]
+    },
+    "class_type": "LoRADownloader",
+    "_meta": {
+      "title": "LoRADownloader"
     }
   }
 }
