@@ -46,42 +46,9 @@ build:
     # ComfyUI_essentials
     - numba
 
-    # ComfyUI_FizzNodes
-    - pandas
-    - numexpr
-
     # ComfyUI-Impact-Pack
     - segment-anything
     - piexif
-
-    # comfyui_controlnet_aux
-    # https://github.com/Fannovel16/comfyui_controlnet_aux/blob/main/requirements.txt
-    - importlib_metadata
-    - opencv-python-headless>=4.0.1.24
-    - filelock
-    - numpy
-    - scikit-image
-    - python-dateutil
-    - mediapipe
-    - svglib
-    - fvcore
-    - yapf
-    - omegaconf
-    - ftfy
-    - addict
-    - yacs
-    - trimesh[easy]
-
-    # ComfyUI-KJNodes
-    - librosa
-    - color-matcher
-
-    # PuLID
-    - facexlib
-
-    # SUPIR
-    - open-clip-torch>=2.24.0
-    - pytorch-lightning>=2.2.1
 
     # For train.py
     - huggingface_hub
@@ -91,7 +58,8 @@ build:
     - apt-get update && apt-get install -y curl
     - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/download/v0.8.1/pget_linux_x86_64" && chmod +x /usr/local/bin/pget
     - pip install onnxruntime-gpu --extra-index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/
-    - jq -r '.[] | "git clone " + .repo + " /comfyui/custom_nodes/" + (.repo | split("/")[-1] | sub(".git$"; "")) + " && cd /comfyui/custom_nodes/" + (.repo | split("/")[-1] | sub(".git$"; "")) + " && git checkout " + .commit' custom_nodes.json | sh
+    - mkdir -p /comfyui/custom_nodes/
+    - jq -r '.[] | "mkdir -p /comfyui/custom_nodes/" + (.repo | split("/")[-1] | sub(".git$"; "")) + " && git clone " + .repo + " /comfyui/custom_nodes/" + (.repo | split("/")[-1] | sub(".git$"; "")) + " && cd /comfyui/custom_nodes/" + (.repo | split("/")[-1] | sub(".git$"; "")) + " && git checkout " + .commit' custom_nodes.json | sh
     - find /comfyui/custom_nodes/ -type f -name install.py -exec python3 {} \;
     - export JUGGERNAUT_XL_URL="https://civitai.com/models/133005?modelVersionId=348913"
     - export ADD_DETAIL_XL_URL="https://huggingface.co/madebyollin/sdxl-vae-fp16-fix/resolve/main/sdxl_vae.safetensors"
