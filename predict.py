@@ -7,6 +7,8 @@ from typing import List
 from cog import BasePredictor, Input, Path
 from comfyui import ComfyUI
 from cog_model_helpers import optimise_images
+from cog_model_helpers import seed as seed_helper
+from weights_downloader import WeightsDownloader
 
 OUTPUT_DIR = "/tmp/outputs"
 INPUT_DIR = "/tmp/inputs"
@@ -33,25 +35,28 @@ class Predictor(BasePredictor):
         try:
             with open(api_json_file, "r") as file:
                 workflow = json.loads(file.read())
-            self.comfyUI.handle_weights(
-                workflow,
-                weights_to_download=[
-                    (os.environ["JUGGERNAUT_XL_URL"], "juggernautXL_v9Rundiffusionphoto2.safetensors"),
-                    (os.environ["ADD_DETAIL_XL_URL"], "add-detail-xl.safetensors"),
-                    (os.environ["ARS_MJ_STYLE_XL_URL"], "ArsMJStyleXL_-_Watercolor.safetensors"),
-                    (os.environ["FRESH_IDEAS_PIXAR_URL"], "Fresh Ideas@pixar style_SDXL.safetensors"),
-                    (os.environ["POP_ART_STYLE_URL"], "pop_art_style.safetensors"),
-                ],
-            )
+            self.download_custom_weights(workflow)
         except Exception as e:
             logging.error(f"Error during setup: {str(e)}")
             raise
+
+    def download_custom_weights(self, workflow):
+        weights_to_download = [
+            ("https://civitai.com/models/133005?modelVersionId=348913", "juggernautXL_v9Rundiffusionphoto2.safetensors"),
+            ("https://huggingface.co/madebyollin/sdxl-vae-fp16-fix/resolve/main/sdxl_vae.safetensors", "add-detail-xl.safetensors"),
+            ("https://civitai.com/api/download/models/636076?type=Model&format=SafeTensor", "ArsMJStyleXL_-_Watercolor.safetensors"),
+            ("https://civitai.com/api/download/models/599318?type=Model&format=SafeTensor", "Fresh Ideas@pixar style_SDXL.safetensors"),
+            ("https://civitai.com/api/download/models/192584?type=Model&format=SafeTensor", "pop_art_style.safetensors"),
+        ]
+        downloader = WeightsDownloader()
+        for url, filename in weights_to_download:
+            downloader.download_weights(url, filename)
 
     def update_workflow(self, workflow, **kwargs):
         logging.info("Updating workflow with user inputs")
         try:
             # Update animal LoRA URL
-            workflow["5"]["inputs"]["lora_name"] = kwargs["animal_lora_url"]
+            workflow["32"]["inputs"]["url"] = kwargs["animal_lora_url"]
             
             # Update animal type in prompts
             for node_id in ["8", "14", "21", "28"]:
@@ -83,7 +88,7 @@ class Predictor(BasePredictor):
         self,
         animal_lora_url: str = Input(
             description="URL or filename of the animal LoRA to use",
-            default="https://example.com/animal_lora.safetensors",
+            default="cdn.andersundbesser.de/petprinted/animal.safetensors",
         ),
         animal_type: str = Input(
             description="Type of animal (e.g., cat, dog)",
@@ -91,7 +96,7 @@ class Predictor(BasePredictor):
         ),
         ip_adapter_image_url: str = Input(
             description="URL of the input image for IP-Adapter",
-            default="https://example.com/input_image.jpg",
+            default="cdn.andersundbesser.de/petprinted/ipa.jpg",
         ),
         watercolor_seed: int = Input(
             description="Seed for watercolor generation (set to -1 for random)",
