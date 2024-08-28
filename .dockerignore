@@ -13,15 +13,21 @@
 *.webp
 *.webm
 
-# Models
+# Models (excluding specific required weights)
 *.ckpt
-*.safetensors
 *.pth
 *.bin
 *.onnx
 *.torchscript
 *.engine
 # .pt files are used by efficiency-nodes-comfyui
+
+# Include specific safetensors files
+!juggernautXL_v9Rundiffusionphoto2.safetensors
+!add-detail-xl.safetensors
+!ArsMJStyleXL_-_Watercolor.safetensors
+!Fresh Ideas@pixar style_SDXL.safetensors
+!pop_art_style.safetensors
 
 # Files
 scripts/*
@@ -43,7 +49,7 @@ ComfyUI/custom_nodes/ComfyUI-AnimateDiff-Evolved/models
 ComfyUI/custom_nodes/ComfyUI-AnimateDiff-Evolved/motion_lora
 ComfyUI/custom_nodes/efficiency-nodes-comfyui/images
 
-# ComfyUI bits we just don’t need
+# ComfyUI bits we just don't need
 ComfyUI/tests
 ComfyUI/tests-ui
 ComfyUI/tests-unit
